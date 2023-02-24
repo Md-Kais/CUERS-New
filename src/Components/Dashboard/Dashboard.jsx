@@ -40,7 +40,7 @@ const menus = [
   },
   {
     person: "Evaluator",
-    activity: [{ menuText: "View bill forms", route: "view-bill-form" }],
+    activity: [{ menuText: "View Bill forms", route: "view-bill-forms" }],
   },
 ];
 
