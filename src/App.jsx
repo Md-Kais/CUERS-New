@@ -122,13 +122,11 @@ function App() {
               logInfoRef.current.role == "Chairman of Exam Committee"
             ) {
               navigate("/dashboard/cec");
-            } else if(
-              logInfoRef.current.role == "Evaluator"
-            ){
-              navigate("/dashboard/evaluator")
+            } else if (logInfoRef.current.role == "Evaluator") {
+              navigate("/dashboard/evaluator");
             }
           } else {
-            Evaluator
+            Evaluator;
             let error = data.msg;
 
             setStatus(["d", error + ". Try again!"]);
@@ -214,10 +212,10 @@ function App() {
               element={<Dashboard userInfo={logInfoRef.current}></Dashboard>}
               path="dashboard/evaluator"
             >
-              <Route 
-              element = {<ViewBillForm></ViewBillForm>} 
-              path="view-bill-form">
-              </Route>
+              <Route
+                element={<ViewBillForm></ViewBillForm>}
+                path="view-bill-form"
+              ></Route>
             </Route>
           </Route>
 

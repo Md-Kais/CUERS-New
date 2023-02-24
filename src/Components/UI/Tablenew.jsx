@@ -25,6 +25,7 @@ const Tablenew = (prop) => {
   const rowStatus = [0, 0];
   const [newRow, setNewRow] = useState(rowStatus);
   const { message, setStatus } = useContext(StatusContext);
+  const [loading, setLoading] = useState(false);
   // the initial state will load the table
   const [changes, setChanges] = useState({
     tableName: tableName,
@@ -36,8 +37,9 @@ const Tablenew = (prop) => {
       //obtain all table structures from session storage and parse into json
       const getTableInfo = JSON.parse(sessionStorage.getItem("tableInfo"));
       const combinedTableInfo = { changes, getTableInfo };
-      // console.log(getTableInfo[tableName])
-      console.log("Requesting");
+      if (changes.operation === "load") {
+        setLoading(true);
+      }
       fetch("http://localhost:3000/users/processData", {
         method: "POST",
         headers: {
@@ -50,6 +52,7 @@ const Tablenew = (prop) => {
           // console.log("At front: ", data);
           if (changes.operation === "load") {
             // when loading, setting a new key
+            setLoading(false);
             const withKey = data.map((item, i) => ({ ...item, key: i }));
             setTableData(withKey);
           } else if (changes.operation === "update") {
@@ -203,14 +206,11 @@ const Tablenew = (prop) => {
 
   const [activeCell, setActiveCell] = useState("");
 
-  if (tableData === undefined) {
-    return <Spin></Spin>;
-  }
   return (
-    <div className="mt-0">
-      <div className="table w-full border-2">
+    <div className="mt-0 min-w-min ">
+      <div className="table  w-full ">
         <div className="table-header-group bg-slate-200 sticky top-0 z-20">
-          <div className="table-row border-red-400">
+          <div className="table-row ">
             {tableCols.map((data) => {
               let icon;
               if (data.type == "dropdown") {
@@ -265,15 +265,22 @@ const Tablenew = (prop) => {
           ))}
         </div>
       </div>
-      <Buttoncmp
-        type="button"
-        variant="stsi"
-        size="full"
-        label="New"
-        onClick={(e) => addRow()}
-      >
-        <PlusIcon></PlusIcon>
-      </Buttoncmp>
+      {loading && (
+        <div className="mt-2">
+          <Spin></Spin>
+        </div>
+      )}
+      <div className="sticky left-0">
+        <Buttoncmp
+          type="button"
+          variant="stsi"
+          size="full"
+          label="New"
+          onClick={(e) => addRow()}
+        >
+          <PlusIcon></PlusIcon>
+        </Buttoncmp>
+      </div>
     </div>
   );
 };

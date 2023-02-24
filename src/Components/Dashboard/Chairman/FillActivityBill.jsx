@@ -83,29 +83,22 @@ const tableCols = [
     type: "button",
     label: "Delete",
     variant: "dasi",
-},
+  },
 ];
 
 const FillActivityBill = () => {
   // const [activities, setActivities] = useState([1, 2]);
 
   return (
-    <div className="flex h-full w-full justify-center overflow-auto text-center">
-      <form action="" className="w-9/12 min-w-fit max-w-4xl p-2 my-4">
-        {/* <hr className="border border-slate-300 mt-12"></hr> */}
-        <div className="mb-8 mt-8">
-          <div>
-            <span className="text-xl sm:text-2xl block">
-              Activity Bill information
-            </span>
-          </div>
-          <div className="mt-8">
-            <Tablenew tableCols={tableCols} tableName="Activity"></Tablenew>
-          </div>
-        </div>
-        {/* <Buttoncmp type="submit" label="Save" variant="stpr"></Buttoncmp> */}
-        {/* <hr className="border border-slate-300 mt-12"></hr> */}
-      </form>
+    <div className="mb-8 mt-8">
+      <div>
+        <span className="text-xl sm:text-2xl block">
+          Activity Bill information
+        </span>
+      </div>
+      <div className="mt-8">
+        <Tablenew tableCols={tableCols} tableName="Activity"></Tablenew>
+      </div>
     </div>
   );
 };

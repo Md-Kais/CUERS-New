@@ -64,26 +64,17 @@ const tablecols = [
   },
 ];
 const ManageEvaluators = (prop) => {
-
   const dosomething = (e) => {
     e.preventDefault();
   };
   return (
-    <div className="flex h-full w-full justify-center text-center">
-      <form action="" className="w-9/12 min-w-fit max-w-4xl p-2 my-4">
-        <div className="mb-8 mt-8">
-          <span className="text-xl sm:text-2xl block">
-            Manage Evaluators
-          </span>
-        </div>
+    <div>
+      <div className="mb-8 mt-8">
+        <span className="text-xl sm:text-2xl block">Manage Evaluators</span>
+      </div>
+      <div>
         <Tablenew tableCols={tablecols} tableName="Evaluator"></Tablenew>
-        {/* <Buttoncmp
-          type="submit"
-          label="Submit"
-          variant="stpr"
-          onClick={dosomething}
-        ></Buttoncmp> */}
-      </form>
+      </div>
     </div>
   );
 };
