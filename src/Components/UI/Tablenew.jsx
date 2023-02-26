@@ -57,25 +57,41 @@ const Tablenew = (prop) => {
             const withKey = data.map((item, i) => ({ ...item, key: i }));
             setTableData(withKey);
           } else if (changes.operation === "update") {
-            // setting the localcopy of the tableData if successfully updated
-            // in the remote database
-            const updatedTable = [...tableData];
-            const ucol = changes.updatedData.colType;
-            const uValue = changes.updatedData.value;
-            updatedTable[changes.index][ucol] = uValue;
-            setTableData(updatedTable);
-            setStatus(["s", "One cell updated"]);
+            console.log("update data here", data);
+            if (data[0]) {
+              const updatedTable = [...tableData];
+              const ucol = changes.updatedData.colType;
+              const uValue = changes.updatedData.value;
+              updatedTable[changes.index][ucol] = uValue;
+              setTableData(updatedTable);
+              setStatus(["s", `${data[1]}`]);
+            } else {
+              setStatus(["d", `${data[1]}`]);
+            }
           } else if (changes.operation === "insert") {
-            setStatus(["s", data.msg]);
-            // setting status to [0, 0], so that user can add new row
-            setNewRow([0, 0]);
+            if (data[0]) {
+              setStatus(["s", `${data[0]} row added`]);
+              setNewRow([0, 0]);
+            } else {
+              console.log("Data[0]", data[0]);
+              setStatus(["d", `${data[1]}`]);
+              setNewRow([1, 0]);
+            }
           } else if (changes.operation === "delete") {
-            setStatus(["d", "One Row deleted"]);
+            console.log("After deleting", data);
+            if (data[0]) {
+              setTableData(
+                tableData.filter((item) => item.key !== changes.key)
+              );
+              setStatus(["d", `${data[0]} row deleted`]);
+            } else {
+              setStatus(["d", `${data[1]}`]);
+            }
           }
+        })
+        .catch((error) => {
+          console.log("Error happend", error);
         });
-      // .catch((error) => {
-      //   console.log(error);
-      // });
     }
     processDB();
   }, [changes]);
@@ -142,7 +158,10 @@ const Tablenew = (prop) => {
         rowIndex !== tableData.length - 1
       ) {
         // console.log("value is", value, "and ", tableData[rowIndex][colType]);
-        if (String(value) !== String(tableData[rowIndex][colType]) && String(value) !== "") {
+        if (
+          String(value) !== String(tableData[rowIndex][colType]) &&
+          String(value) !== ""
+        ) {
           console.log(String(value), String(tableData[rowIndex][colType]));
           const editedRow = { ...tableData[rowIndex] };
           delete editedRow.key;
@@ -184,6 +203,7 @@ const Tablenew = (prop) => {
             tableName: tableName,
             row: toUploadRow,
             operation: "insert",
+            changeState: !newRow[0],
           });
           // const addedStatus = processDB(tableName, rowIndex, "insert");
           // if (addedStatus) {
@@ -198,17 +218,21 @@ const Tablenew = (prop) => {
 
   const handleDelete = (key, rowIndex) => {
     const deletedRow = { ...tableData[rowIndex] };
-    setTableData(tableData.filter((item) => item.key !== key));
     delete deletedRow.key;
     if (
       rowIndex !== tableData.length - 1 ||
       (rowIndex === tableData.length - 1 && newRow[0] === 0 && newRow[1] === 0)
     ) {
+      console.log("Indirect action");
       setChanges({
         tableName: tableName,
         row: deletedRow,
         operation: "delete",
+        key: key,
       });
+    } else {
+      console.log("direct action");
+      setTableData(tableData.filter((item) => item.key !== key));
     }
   };
 

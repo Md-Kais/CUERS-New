@@ -23,7 +23,7 @@ const tablecols = [
     required: true,
   },
   {
-    col: "semester_number",
+    col: "semester_no",
     type: "dropdown",
     values: [1, 2, 3, 4, 5, 6, 7, 8],
     required: true,

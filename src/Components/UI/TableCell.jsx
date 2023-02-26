@@ -56,7 +56,7 @@ const TableCell = (prop) => {
         if (col.regex) {
           const isValid = checkRegex(e.target.innerText);
           onUpdate(e.target.innerText, isValid);
-        } else {
+        } else if (col.type != "button") {
           onUpdate(e.target.innerText);
         }
         onActive(e, false);
