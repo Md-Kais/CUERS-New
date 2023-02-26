@@ -60,22 +60,8 @@ const Dashboard = (prop) => {
     setActive(`${activity.route}`);
     if (window.location.pathname.includes("cec")) {
       navigate(`/dashboard/cec/${activity.route}`);
-      // if (activity.menuText == "Manage semester activity") {
-      //   navigate("/dashboard/cec/manage-semester-activity");
-      // } else if (activity.menuText == "Manage course activity") {
-      //   navigate("/dashboard/cec/evaluates-course-activity");
-      // } else if (activity.menuText == "Manage edit requests") {
-      //   navigate("/dashboard/cec/manage-edit-requests");
-      // }
     } else if (window.location.pathname.includes("chairman")) {
       navigate(`/dashboard/chairman/${activity.route}`);
-      // if (activity.menuText == "Manage activity bill") {
-      //   navigate("/dashboard/chairman/fill-activity-bill");
-      // } else if (activity.menuText == "Exam committee info") {
-      //   navigate("/dashboard/chairman/form-exam-committee");
-      // } else if (activity.menuText == "Manage evaluators") {
-      //   navigate("/dashboard/chairman/manage-evaluators");
-      // }
     } else if (window.location.pathname.includes("evaluator")) {
       navigate(`/dashboard/evaluator/${activity.route}`);
     }
@@ -108,7 +94,7 @@ const Dashboard = (prop) => {
                       size="full"
                       value={option.menuText}
                       onClick={() => clickme(option)}
-                      isActive = {active === option.route}
+                      isActive={active === option.route}
                     >
                       <HashtagIcon></HashtagIcon>
                     </Buttoncmp>

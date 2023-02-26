@@ -5,7 +5,7 @@ export const DashboardContent = (prop) => {
   return (
     <div className="flex-1 h-full justify-center items-center min-w-min text-center">
       <form action="" className="p-2 my-4">
-        {children};
+        {children}
       </form>
     </div>
   );

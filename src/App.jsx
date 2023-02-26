@@ -32,6 +32,7 @@ import PrivateOutlet from "./Components/Login/PrivateOutlet";
 import { StatusContext } from "./Components/UI/StatusContext";
 import ViewBillForm from "./Components/Dashboard/Evaluator/ViewBillForm";
 import CourseInSemesterExam from "./Components/Dashboard/CEC/CourseInSemesterExam";
+import Spin from "./Components/UI/Spin";
 function App() {
   const navigate = useNavigate();
 
@@ -126,19 +127,18 @@ function App() {
               navigate("/dashboard/evaluator");
             }
           } else {
-            Evaluator;
             let error = data.msg;
-
+            setToLogin(false);
             setStatus(["d", error + ". Try again!"]);
           }
         })
         .catch((error) => {
           console.error(error);
         });
-      setToLogin(false);
     }
   }, [tologin]);
   function onLogin(e) {
+    setToLogin(true);
     setAuthenticated(sessionStorage.getItem("previouslyLogin"));
     console.log(sessionStorage.getItem("previouslyLogin"));
     sessionStorage.setItem("role", e.target[0].value);
@@ -150,17 +150,25 @@ function App() {
     logInfoRef.current.role = sessionStorage.getItem("role");
     logInfoRef.current.evaluator_id = sessionStorage.getItem("evaluator_id");
     logInfoRef.current.password = sessionStorage.getItem("password");
-    setToLogin(true);
   }
 
   return (
     <div className="bg-slate-100 flex flex-col h-screen relative overflow-hidden">
       <StatusContext.Provider
-        value={{ message: message, setStatus: setStatus }}
+        value={{
+          message: message,
+          setStatus: setStatus,
+          evaluator: sessionStorage.getItem("evaluator_id"),
+        }}
       >
         <div>
           <Navbar></Navbar>
         </div>
+        {tologin && (
+          <div className="mt-20 absolute w-full">
+            <Spin></Spin>
+          </div>
+        )}
         <Routes>
           <Route
             element={<Login onLogin={onLogin}></Login>}

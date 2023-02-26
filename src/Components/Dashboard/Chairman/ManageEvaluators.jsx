@@ -8,11 +8,15 @@ const tablecols = [
   {
     col: "evaluator_id",
     type: "number",
+    regex: "^\\d{4}$",
+    regexMessage: "e.g. 1013",
     required: true,
   },
   {
     col: "evaluator_name",
     type: "text",
+    regex: "^[A-Za-z .]+$",
+    regexMessage: "e.g. Dr. Rudra Pratap Deb Nath",
     required: true,
   },
   {
@@ -53,7 +57,8 @@ const tablecols = [
   {
     col: "phone_no",
     type: "tel",
-    // [0-9]
+    regex: "^\\d{11}$",
+    regexMessage: "e.g. 01234567892",
     required: true,
   },
   {

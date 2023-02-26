@@ -24,13 +24,14 @@ const Tablenew = (prop) => {
   // const [indexi, setIndexi] = useState(1);
   const rowStatus = [0, 0];
   const [newRow, setNewRow] = useState(rowStatus);
-  const { message, setStatus } = useContext(StatusContext);
-  const [loading, setLoading] = useState(false);
+  const { message, setStatus, evaluator } = useContext(StatusContext);
+  const [dataLoading, setDataLoading] = useState(false);
   // the initial state will load the table
   const [changes, setChanges] = useState({
     tableName: tableName,
     operation: "load",
   });
+  console.log("Current evaluator is ", evaluator);
 
   useEffect(() => {
     function processDB() {
@@ -38,7 +39,7 @@ const Tablenew = (prop) => {
       const getTableInfo = JSON.parse(sessionStorage.getItem("tableInfo"));
       const combinedTableInfo = { changes, getTableInfo };
       if (changes.operation === "load") {
-        setLoading(true);
+        setDataLoading(true);
       }
       fetch("http://localhost:3000/users/processData", {
         method: "POST",
@@ -52,7 +53,7 @@ const Tablenew = (prop) => {
           // console.log("At front: ", data);
           if (changes.operation === "load") {
             // when loading, setting a new key
-            setLoading(false);
+            setDataLoading(false);
             const withKey = data.map((item, i) => ({ ...item, key: i }));
             setTableData(withKey);
           } else if (changes.operation === "update") {
@@ -126,64 +127,71 @@ const Tablenew = (prop) => {
     }
   };
 
-  const updateCell = (value, rowIndex, colType) => {
+  const updateCell = (value, isValid, rowIndex, col) => {
     // Editing realtime except the last index(if it is not uploaded yet [0, 0] or [1,0])
     // console.log("TableLength while editing: ", tableData.length);
-    if (
-      (rowIndex === tableData.length - 1 &&
-        newRow[0] === 0 &&
-        newRow[1] === 0) ||
-      rowIndex !== tableData.length - 1
-    ) {
-      // console.log("value is", value, "and ", tableData[rowIndex][colType]);
-      if (String(value) !== String(tableData[rowIndex][colType])) {
-        const editedRow = { ...tableData[rowIndex] };
-        delete editedRow.key;
-        setChanges({
-          tableName: tableName,
-          row: editedRow,
-          operation: "update",
-          updatedData: {
-            colType: colType,
-            value: value,
-          },
-          index: rowIndex,
-        });
+    console.log("validity checking", isValid);
+    const colType = col.col;
+    if (!isValid && isValid !== undefined) {
+      setStatus(["d", `Please use a valid value! (${col.regexMessage})`]);
+    } else {
+      if (
+        (rowIndex === tableData.length - 1 &&
+          newRow[0] === 0 &&
+          newRow[1] === 0) ||
+        rowIndex !== tableData.length - 1
+      ) {
+        // console.log("value is", value, "and ", tableData[rowIndex][colType]);
+        if (String(value) !== String(tableData[rowIndex][colType]) && String(value) !== "") {
+          console.log(String(value), String(tableData[rowIndex][colType]));
+          const editedRow = { ...tableData[rowIndex] };
+          delete editedRow.key;
+          setChanges({
+            tableName: tableName,
+            row: editedRow,
+            operation: "update",
+            updatedData: {
+              colType: colType,
+              value: value,
+            },
+            index: rowIndex,
+          });
+        }
       }
-    }
 
-    // Uploading a new row to the database when [1,0], added, not yet uploaded
-    // we're doing it when the user edits the last column of the new row
-    else if (
-      rowIndex === tableData.length - 1 &&
-      newRow[0] === 1 &&
-      newRow[1] === 0
-    ) {
-      // updating the lastRow as the user edits it
-      console.log(tableData[rowIndex]);
-      let newTableData = Object.assign([], tableData);
-      newTableData[rowIndex][colType] = value;
-      setTableData(newTableData);
-      // --------------
-      // Checking if the whole row is completely filled
-      const fillStatus = checkIfFilled(rowIndex);
-      console.log("Fillstatus and newRow:", fillStatus, newRow);
-      if (fillStatus && newRow[0] === 1 && newRow[1] === 0) {
-        // we're just passing the row index, processDB should return a status of the adding
-        const toUploadRow = { ...tableData[rowIndex] };
-        console.log("TouploadRow: ", toUploadRow);
-        delete toUploadRow.key;
-        setChanges({
-          tableName: tableName,
-          row: toUploadRow,
-          operation: "insert",
-        });
-        // const addedStatus = processDB(tableName, rowIndex, "insert");
-        // if (addedStatus) {
-        //   setStatus(["s", "New row saved!"]);
-        //   setNewRow([0, 0]);
-        //   // user can add another row
-        // }
+      // Uploading a new row to the database when [1,0], added, not yet uploaded
+      // we're doing it when the user edits the last column of the new row
+      else if (
+        rowIndex === tableData.length - 1 &&
+        newRow[0] === 1 &&
+        newRow[1] === 0
+      ) {
+        // updating the lastRow as the user edits it
+        console.log(tableData[rowIndex]);
+        let newTableData = Object.assign([], tableData);
+        newTableData[rowIndex][colType] = value;
+        setTableData(newTableData);
+        // --------------
+        // Checking if the whole row is completely filled
+        const fillStatus = checkIfFilled(rowIndex);
+        console.log("Fillstatus and newRow:", fillStatus, newRow);
+        if (fillStatus && newRow[0] === 1 && newRow[1] === 0) {
+          // we're just passing the row index, processDB should return a status of the adding
+          const toUploadRow = { ...tableData[rowIndex] };
+          console.log("TouploadRow: ", toUploadRow);
+          delete toUploadRow.key;
+          setChanges({
+            tableName: tableName,
+            row: toUploadRow,
+            operation: "insert",
+          });
+          // const addedStatus = processDB(tableName, rowIndex, "insert");
+          // if (addedStatus) {
+          //   setStatus(["s", "New row saved!"]);
+          //   setNewRow([0, 0]);
+          //   // user can add another row
+          // }
+        }
       }
     }
   };
@@ -231,7 +239,7 @@ const Tablenew = (prop) => {
                 );
               }
               return (
-                <div className="table-cell p-2 border-r border-r-slate-300 font-bold text-slate-600">
+                <div className="relative table-cell p-2 border-r border-r-slate-300 font-bold text-slate-600 ">
                   <div className="flex justify-center items-center gap-2">
                     {icon}
                     {data.col.charAt(0).toUpperCase() + data.col.slice(1)}
@@ -256,7 +264,9 @@ const Tablenew = (prop) => {
                       setActiveCell(col.type + row.value + col.col);
                       e.stopPropagation();
                     }}
-                    onUpdate={(value) => updateCell(value, rowIndex, col.col)}
+                    onUpdate={(value, isValid) =>
+                      updateCell(value, isValid, rowIndex, col)
+                    }
                     onDelete={(e) => handleDelete(row.key, rowIndex)}
                   ></TableCell>
                 );
@@ -265,7 +275,7 @@ const Tablenew = (prop) => {
           ))}
         </div>
       </div>
-      {loading && (
+      {dataLoading && (
         <div className="mt-2">
           <Spin></Spin>
         </div>

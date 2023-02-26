@@ -18,6 +18,8 @@ const tablecols = [
   {
     col: "evaluator_id",
     type: "number",
+    regex: "^\\d{4}$",
+    regexMessage: "e.g. 1013",
     required: true,
   },
   {
@@ -35,6 +37,8 @@ const tablecols = [
   {
     col: "quantity",
     type: "number",
+    regex: "^\\d+(\\.\\d+)?$",
+    regexMessage: "e.g. 12",
     required: true,
   },
   {
