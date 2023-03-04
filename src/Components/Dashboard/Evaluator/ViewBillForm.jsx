@@ -87,6 +87,14 @@ const ViewBillForm = () => {
       "semester_no": sessionStorage.getItem("semester_no")
     },
     {
+      "activity_type_id": 5,
+      "sector_or_program": "ব্যবহারিক",
+      "factor": ["দিন", "ঘণ্টা"],
+      "front": 9,
+      "evaluator_id": sessionStorage.getItem("evaluator_id"),
+      "semester_no": sessionStorage.getItem("semester_no")
+    },
+    {
       "activity_type_id": 8,
       "sector_or_program": "অনার্স",
       "factor": "ছাত্রের সংখ্যা",
