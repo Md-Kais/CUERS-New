@@ -69,6 +69,8 @@ const Dashboard = (prop) => {
                     menuText: 'Generate activity PDF',
                     route: 'generate-activity-pdf',
                 },
+
+                { menuText: 'Check Bill Forms', route: 'check_bill_forms' },
             ],
         },
         {
@@ -76,6 +78,36 @@ const Dashboard = (prop) => {
             activity: [
                 { menuText: 'View Bill forms', route: 'view-bill-form' },
                 { menuText: 'Track Bill', route: 'track-bill-form' },
+            ],
+        },
+        {
+            person: 'Exam Controller',
+            activity: [
+                { menuText: 'Check Bill Forms', route: 'check_bill_forms' },
+            ],
+        },
+        {
+            person: 'Exam Bill Section',
+            activity: [
+                { menuText: 'Check Bill Forms', route: 'check_bill_forms' },
+            ],
+        },
+        {
+            person: 'Account Chief',
+            activity: [
+                { menuText: 'Check Bill Forms', route: 'check_bill_forms' },
+            ],
+        },
+        {
+            person: 'Account Bill Section',
+            activity: [
+                { menuText: 'Check Bill Forms', route: 'check_bill_forms' },
+            ],
+        },
+        {
+            person: 'Account Cheque section',
+            activity: [
+                { menuText: 'Check Bill Forms', route: 'check_bill_forms' },
             ],
         },
     ];
@@ -97,7 +129,7 @@ const Dashboard = (prop) => {
     };
 
     //Button added for Sidebar when you clicked the sidebar button. And Check the user.
-    const clickme = (activity, e) => {
+    const clickme = (activity, person, e) => {
         // CEC
         setActive(`${activity.route}`);
         if (window.location.pathname.includes('cec')) {
@@ -108,6 +140,8 @@ const Dashboard = (prop) => {
             navigate(`/dashboard/evaluator/${activity.route}`);
         } else if (window.location.pathname.includes('evaluator')) {
             navigate(`/dashboard/evaluator/${activity.route}`);
+        } else if (!window.location.pathname.includes('check_bill_forms')) {
+            navigate(`${window.location.pathname}/${activity.route}`);
         }
     };
 
@@ -138,7 +172,9 @@ const Dashboard = (prop) => {
                                             variant="stsi"
                                             size="full"
                                             value={t(option.menuText)}
-                                            onClick={() => clickme(option)}
+                                            onClick={() =>
+                                                clickme(option, person)
+                                            }
                                             isActive={active === option.route}
                                             disabled={
                                                 option.menuText ==

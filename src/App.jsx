@@ -1,50 +1,51 @@
-import React, { useRef, useState } from "react";
-import Navbar from "./Components/UI/Navbar";
-import "../app/globals.css";
+import React, { useRef, useState } from 'react';
+import Navbar from './Components/UI/Navbar';
+import '../app/globals.css';
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faCarBattery,
     faLeftRight,
     faEnvelope,
-} from "@fortawesome/free-solid-svg-icons";
-import { faNode } from "@fortawesome/free-brands-svg-icons";
-import { Login } from "./Components/Login/Login";
-import Buttoncmp from "./Components/UI/Buttoncmp";
-import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/solid";
-import Inputcmp from "./Components/UI/Inputcmp";
-import Dashboard from "./Components/Dashboard/Dashboard";
-import Table from "./Components/UI/Table";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+} from '@fortawesome/free-solid-svg-icons';
+import { faNode } from '@fortawesome/free-brands-svg-icons';
+import { Login } from './Components/Login/Login';
+import Buttoncmp from './Components/UI/Buttoncmp';
+import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/solid';
+import Inputcmp from './Components/UI/Inputcmp';
+import Dashboard from './Components/Dashboard/Dashboard';
+import Table from './Components/UI/Table';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import Chairman from "./Components/Dashboard/Chairman/Chairman";
-import CEC from "./Components/Dashboard/CEC/CEC";
-import Evaluator from "./Components/Dashboard/Evaluator/Evaluator";
-import EvaluatesCourseActivity from "./Components/Dashboard/CEC/EvaluatesCourseActivity";
-import ManageSemesterActivity from "./Components/Dashboard/CEC/ManageSemesterActivity";
-import ManageEditRequests from "./Components/Dashboard/CEC/ManageEditRequests";
-import { Outlet } from "react-router-dom";
-import FillActivityBill from "./Components/Dashboard/Chairman/FillActivityBill";
-import FormExamCommittee from "./Components/Dashboard/Chairman/FormExamCommittee";
-import ManageEvaluators from "./Components/Dashboard/Chairman/ManageEvaluators";
-import Status from "./Components/UI/Status";
-import { useEffect } from "react";
-import PrivateOutlet from "./Components/Login/PrivateOutlet";
-import { StatusContext } from "./Components/UI/StatusContext";
-import ViewBillForm from "./Components/Dashboard/Evaluator/ViewBillForm";
-import CourseInSemesterExam from "./Components/Dashboard/CEC/CourseInSemesterExam";
-import Spin from "./Components/UI/Spin";
-import { GenerateActivityPDF } from "./Components/Dashboard/CEC/PdfGeneration/GenerateActivityPDF";
-import { fetchData } from "./Components/fetchModule";
-import BillPdf from "./Components/Dashboard/Evaluator/BillPdf";
-import { DashboardContext } from "./Components/UI/DashboardContext";
+import Chairman from './Components/Dashboard/Chairman/Chairman';
+import CEC from './Components/Dashboard/CEC/CEC';
+import Evaluator from './Components/Dashboard/Evaluator/Evaluator';
+import EvaluatesCourseActivity from './Components/Dashboard/CEC/EvaluatesCourseActivity';
+import ManageSemesterActivity from './Components/Dashboard/CEC/ManageSemesterActivity';
+import ManageEditRequests from './Components/Dashboard/CEC/ManageEditRequests';
+import { Outlet } from 'react-router-dom';
+import FillActivityBill from './Components/Dashboard/Chairman/FillActivityBill';
+import FormExamCommittee from './Components/Dashboard/Chairman/FormExamCommittee';
+import ManageEvaluators from './Components/Dashboard/Chairman/ManageEvaluators';
+import Status from './Components/UI/Status';
+import { useEffect } from 'react';
+import PrivateOutlet from './Components/Login/PrivateOutlet';
+import { StatusContext } from './Components/UI/StatusContext';
+import ViewBillForm from './Components/Dashboard/Evaluator/ViewBillForm';
+import CourseInSemesterExam from './Components/Dashboard/CEC/CourseInSemesterExam';
+import Spin from './Components/UI/Spin';
+import { GenerateActivityPDF } from './Components/Dashboard/CEC/PdfGeneration/GenerateActivityPDF';
+import { fetchData } from './Components/fetchModule';
+import BillPdf from './Components/Dashboard/Evaluator/BillPdf';
+import { DashboardContext } from './Components/UI/DashboardContext';
 import {
     DropdownOptionsContext,
     DropdownOptionsProvider,
-} from "./Components/DropdownOptionsContext";
-import { FilterContextProvider } from "./Components/UI/FilterContext";
-import BillTrack from "./Components/Dashboard/Evaluator/BillTrack";
+} from './Components/DropdownOptionsContext';
+import { FilterContextProvider } from './Components/UI/FilterContext';
+import BillTrack from './Components/Dashboard/Evaluator/BillTrack';
+import CheckBillForms from './Components/Dashboard/Staff/CheckBillForms';
 
 function App() {
     const navigate = useNavigate();
@@ -66,37 +67,41 @@ function App() {
     const [isAuthenticated, setAuthenticated] = useState(false);
 
     const tableNames = [
-        "Evaluator",
-        "Activity",
-        "Activity_Type",
-        "Course",
-        "Course_in_Semester_Exam",
-        "Evaluates_Course_Activity",
-        "Processes_Semester_Activity",
-        "Exam_Committee",
-        "Login_Info",
+        'Evaluator',
+        'Staff',
+        'Bill',
+        'BillChecks',
+        'ExamBill_Flow',
+        'Activity',
+        'Activity_Type',
+        'Course',
+        'Course_in_Semester_Exam',
+        'Evaluates_Course_Activity',
+        'Processes_Semester_Activity',
+        'Exam_Committee',
+        'Login_Info',
     ];
     const dropDownCols = [
-        "activity_type_id",
-        "sector_or_program",
-        "factor",
-        "category",
+        'activity_type_id',
+        'sector_or_program',
+        'factor',
+        'category',
     ];
 
     const [isLoading, setLoading] = useState(true);
     const logInfoRef = useRef({
-        role: "",
-        evaluator_id: "",
-        password: "",
+        role: '',
+        evaluator_id: '',
+        password: '',
     });
     useEffect(() => {
         async function loadTableInfo() {
             const response = await fetch(
-                "http://localhost:3000/users/loadTableInfo",
+                'http://localhost:3000/users/loadTableInfo',
                 {
-                    method: "POST",
+                    method: 'POST',
                     headers: {
-                        "Content-Type": "application/json",
+                        'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ tableNames }),
                 }
@@ -110,15 +115,15 @@ function App() {
             const changes = {
                 tableName: `${tableName}`,
                 conditionCheck: `${colName} = ${colValue}`,
-                operation: "load",
+                operation: 'load',
             };
             // console.log(changes);
             const response = await fetch(
-                "http://localhost:3000/users/processData",
+                'http://localhost:3000/users/processData',
                 {
-                    method: "POST",
+                    method: 'POST',
                     headers: {
-                        "Content-Type": "application/json",
+                        'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ changes }),
                 }
@@ -128,69 +133,101 @@ function App() {
         }
 
         if (tologin) {
-            fetch("http://localhost:3000/users/authenticatelogin", {
-                method: "POST",
+            fetch('http://localhost:3000/users/authenticatelogin', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(logInfoRef.current),
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    if (data.msg === "Correct Password") {
-                        // sessionStorage.clear();
-                        // console.log(isAuthenticated);
+                    if (data.msg === 'Correct Password') {
                         setAuthenticated(true);
-                        sessionStorage.setItem("previouslyLogin", true);
+                        sessionStorage.setItem('previouslyLogin', true);
                         setLoading(false);
-                        setStatus(["s", "User Authenticated!"]);
+                        setStatus(['s', 'User Authenticated!']);
 
                         // fetching tableInfo
                         (async () => {
                             let tableInfo = await loadTableInfo();
                             // while (Object.keys(tableInfo).length !== 1) {
                             // tableInfo = await loadTableInfo();
-                            console.log("still accumulating tableInfo");
+                            console.log('still accumulating tableInfo');
                             console.log(tableInfo);
                             sessionStorage.setItem(
-                                "tableInfo",
+                                'tableInfo',
                                 JSON.stringify(tableInfo)
                             );
                         })().then(() => {
                             (async () => {
-                                let evaluatorInfo = await fetchData(
-                                    "Evaluator",
-                                    "processData",
-                                    undefined,
-                                    [
-                                        {
-                                            evaluator_id:
-                                                sessionStorage.getItem(
-                                                    "evaluator_id"
-                                                ),
-                                        },
-                                    ],
-                                    undefined
-                                );
+                                let evaluatorInfo;
+                                if (
+                                    sessionStorage
+                                        .getItem('evaluator_id')
+                                        .startsWith('2')
+                                ) {
+                                    evaluatorInfo = await fetchData(
+                                        'Staff',
+                                        'processData',
+                                        undefined,
+                                        [
+                                            {
+                                                staff_id:
+                                                    sessionStorage.getItem(
+                                                        'evaluator_id'
+                                                    ),
+                                            },
+                                        ],
+                                        undefined
+                                    );
+                                } else {
+                                    evaluatorInfo = await fetchData(
+                                        'Evaluator',
+                                        'processData',
+                                        undefined,
+                                        [
+                                            {
+                                                evaluator_id:
+                                                    sessionStorage.getItem(
+                                                        'evaluator_id'
+                                                    ),
+                                            },
+                                        ],
+                                        undefined
+                                    );
+                                }
                                 sessionStorage.setItem(
-                                    "evaluatorInfo",
+                                    'evaluatorInfo',
                                     JSON.stringify(evaluatorInfo[0])
                                 );
                             })();
-                            if (logInfoRef.current.role == "Chairman") {
+                            console.log(
+                                'Teh role is: ',
+                                logInfoRef.current.role,
+                                logInfoRef.current.role in
+                                    [
+                                        'Exam Controller',
+                                        'Exam Bill Section',
+                                        'Account Bill Section',
+                                        'Account Cheque Section',
+                                        'Account Chief',
+                                    ]
+                            );
+                            if (logInfoRef.current.role == 'Chairman') {
                                 console.log(
-                                    "Here: ",
-                                    sessionStorage.getItem("tableInfo")
+                                    'Here: ',
+                                    sessionStorage.getItem('tableInfo')
                                 );
-                                navigate("/dashboard/chairman");
+                                navigate('/dashboard/chairman');
                                 setToLogin(false);
                             } else if (
                                 logInfoRef.current.role ==
-                                "Chairman of Exam Committee"
+                                'Chairman of Exam Committee'
                             ) {
                                 (async () => {
-                                    let tableName = "Exam_Committee";
-                                    let colName = "evaluator_id";
+                                    let tableName = 'Exam_Committee';
+                                    let colName = 'evaluator_id';
                                     let colValue =
                                         logInfoRef.current.evaluator_id;
 
@@ -203,15 +240,33 @@ function App() {
                                         semesterInfo[0];
                                     //  console.log(semester_no);
                                     sessionStorage.setItem(
-                                        "semester_no",
+                                        'semester_no',
                                         semester_no
                                     );
-                                    sessionStorage.setItem("year", year);
+                                    sessionStorage.setItem('year', year);
                                 })();
-                                navigate("/dashboard/cec");
+                                navigate('/dashboard/cec');
                                 setToLogin(false);
-                            } else if (logInfoRef.current.role == "Evaluator") {
-                                navigate("/dashboard/evaluator");
+                            } else if (logInfoRef.current.role == 'Evaluator') {
+                                navigate('/dashboard/evaluator');
+                                setToLogin(false);
+                            } else if (
+                                // staff roles
+                                [
+                                    'Exam Controller',
+                                    'Exam Bill Section',
+                                    'Account Bill Section',
+                                    'Account Cheque Section',
+                                    'Account Chief',
+                                ].includes(logInfoRef.current.role)
+                            ) {
+                                console.log(logInfoRef.current.role);
+                                navigate(
+                                    '/dashboard/' +
+                                        logInfoRef.current.role
+                                            .toLowerCase()
+                                            .replace(/\s+/g, '_')
+                                );
                                 setToLogin(false);
                             }
                         });
@@ -221,7 +276,7 @@ function App() {
                     } else {
                         let error = data.msg;
                         setToLogin(false);
-                        setStatus(["d", error + ". Try again!"]);
+                        setStatus(['d', error + '. Try again!']);
                     }
                 })
                 .catch((error) => {
@@ -231,18 +286,18 @@ function App() {
     }, [tologin]);
     function onLogin(e) {
         setToLogin(true);
-        setAuthenticated(sessionStorage.getItem("previouslyLogin"));
-        console.log(sessionStorage.getItem("previouslyLogin"));
-        sessionStorage.setItem("role", e.target[0].value);
-        sessionStorage.setItem("evaluator_id", e.target[1].value);
-        sessionStorage.setItem("password", e.target[2].value);
-        console.log(sessionStorage.getItem("role"));
-        console.log(sessionStorage.getItem("evaluator_id"));
-        console.log(sessionStorage.getItem("password"));
-        logInfoRef.current.role = sessionStorage.getItem("role");
+        setAuthenticated(sessionStorage.getItem('previouslyLogin'));
+        console.log(sessionStorage.getItem('previouslyLogin'));
+        sessionStorage.setItem('role', e.target[0].value);
+        sessionStorage.setItem('evaluator_id', e.target[1].value);
+        sessionStorage.setItem('password', e.target[2].value);
+        console.log(sessionStorage.getItem('role'));
+        console.log(sessionStorage.getItem('evaluator_id'));
+        console.log(sessionStorage.getItem('password'));
+        logInfoRef.current.role = sessionStorage.getItem('role');
         logInfoRef.current.evaluator_id =
-            sessionStorage.getItem("evaluator_id");
-        logInfoRef.current.password = sessionStorage.getItem("password");
+            sessionStorage.getItem('evaluator_id');
+        logInfoRef.current.password = sessionStorage.getItem('password');
     }
 
     return (
@@ -251,7 +306,7 @@ function App() {
                 value={{
                     message: message,
                     setStatus: setStatus,
-                    evaluator: sessionStorage.getItem("evaluator_id"),
+                    evaluator: sessionStorage.getItem('evaluator_id'),
                 }}
             >
                 <div>
@@ -277,6 +332,77 @@ function App() {
                                     />
                                 }
                             >
+                                {/* exam controller */}
+                                <Route
+                                    element={
+                                        <Dashboard
+                                            userInfo={logInfoRef.current}
+                                        ></Dashboard>
+                                    }
+                                    path="dashboard/exam_controller"
+                                >
+                                    <Route
+                                        element={<CheckBillForms />}
+                                        path="check_bill_forms"
+                                    ></Route>
+                                </Route>
+                                {/* account bill section */}
+                                <Route
+                                    element={
+                                        <Dashboard
+                                            userInfo={logInfoRef.current}
+                                        ></Dashboard>
+                                    }
+                                    path="dashboard/account_bill_section"
+                                >
+                                    <Route
+                                        element={<CheckBillForms />}
+                                        path="check_bill_forms"
+                                    ></Route>
+                                </Route>
+                                {/* account cheque section */}
+                                <Route
+                                    element={
+                                        <Dashboard
+                                            userInfo={logInfoRef.current}
+                                        ></Dashboard>
+                                    }
+                                    path="dashboard/account_cheque_section"
+                                >
+                                    <Route
+                                        element={<CheckBillForms />}
+                                        path="check_bill_forms"
+                                    ></Route>
+                                </Route>
+                                {/* account chief */}
+                                <Route
+                                    element={
+                                        <Dashboard
+                                            userInfo={logInfoRef.current}
+                                        ></Dashboard>
+                                    }
+                                    path="dashboard/account_chief"
+                                >
+                                    <Route
+                                        element={<CheckBillForms />}
+                                        path="check_bill_forms"
+                                    ></Route>
+                                </Route>
+                                {/* exam_bill_section */}
+                                <Route
+                                    element={
+                                        <Dashboard
+                                            userInfo={logInfoRef.current}
+                                        ></Dashboard>
+                                    }
+                                    path="dashboard/exam_bill_section"
+                                >
+                                    <Route
+                                        element={<CheckBillForms />}
+                                        path="check_bill_forms"
+                                    ></Route>
+                                </Route>
+
                                 <Route
                                     element={
                                         <Dashboard
@@ -312,6 +438,10 @@ function App() {
                                     }
                                     path="dashboard/cec"
                                 >
+                                    <Route
+                                        element={<CheckBillForms />}
+                                        path="check_bill_forms"
+                                    ></Route>
                                     <Route
                                         element={
                                             <EvaluatesCourseActivity></EvaluatesCourseActivity>

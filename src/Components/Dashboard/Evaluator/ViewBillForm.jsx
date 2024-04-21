@@ -401,6 +401,25 @@ const ViewBillForm = () => {
         keys = Object.keys(billData[0]);
         keys.sort();
     }
+
+    const submitToCEC = async () => {
+        const evaluatorId = sessionStorage.getItem('evaluator_id');
+        const semesterNo = selectedSemester;
+        const billFormInfo = {
+            evaluator_id: evaluatorId,
+            semester_no: semesterNo,
+            year: year,
+            status: 'Waiting',
+            bill_id: String(evaluatorId) + String(semesterNo) + String(year),
+        };
+        const response = await fetch('http://localhost:3000/users/insertBill', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ billFormInfo }),
+        });
+    };
     return (
         <div>
             <BillFormDropdown
@@ -414,37 +433,50 @@ const ViewBillForm = () => {
             billData.length == 0 ? (
                 <div>No data to show!</div>
             ) : (
-                <div className="table w-full">
-                    <div className="table-header-group top-0 sticky bg-slate-300">
-                        {
-                            <div className="table-row">
-                                {keys.map((key, index) => (
-                                    <div
-                                        key={index}
-                                        className=" table-cell p-2 border border-slate-900"
-                                    >
-                                        {key}
-                                    </div>
-                                ))}
-                            </div>
-                        }
+                <div className="flex flex-col items-start gap-10">
+                    <div className="table w-full">
+                        <div className="table-header-group top-0 sticky bg-slate-300">
+                            {
+                                <div className="table-row">
+                                    {keys.map((key, index) => (
+                                        <div
+                                            key={index}
+                                            className=" table-cell p-2 border border-slate-900"
+                                        >
+                                            {key}
+                                        </div>
+                                    ))}
+                                </div>
+                            }
+                        </div>
+                        {billData &&
+                            billData.map((item, index1) => (
+                                <div key={index1} className="table-row">
+                                    {keys.map((key, index2) => (
+                                        <div
+                                            key={
+                                                index1.toString() +
+                                                index2.toString()
+                                            }
+                                            className="table-cell border p-2"
+                                        >
+                                            <div>{item[key]}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
                     </div>
-                    {billData &&
-                        billData.map((item, index1) => (
-                            <div key={index1} className="table-row">
-                                {keys.map((key, index2) => (
-                                    <div
-                                        key={
-                                            index1.toString() +
-                                            index2.toString()
-                                        }
-                                        className="table-cell border p-2"
-                                    >
-                                        <div>{item[key]}</div>
-                                    </div>
-                                ))}
-                            </div>
-                        ))}
+                    <div>
+                        <Buttoncmp
+                            type="submit"
+                            onClick={() => {
+                                submitToCEC();
+                            }}
+                            label="Send to CEC"
+                            variant="stpr"
+                            size="min"
+                        ></Buttoncmp>
+                    </div>
                 </div>
             )}
         </div>
